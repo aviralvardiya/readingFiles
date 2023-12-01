@@ -1,0 +1,34 @@
+package blogposts
+
+import (
+	"io/fs"
+	// "testing/fstest"
+)
+
+
+
+func NewPostsFromFS(fileSystem fs.FS) ([]Post, error) {
+	dir, err := fs.ReadDir(fileSystem, ".")
+	if err != nil {
+		return nil, err
+	}
+	var posts []Post
+	for _, f := range dir {
+		post, err := getPost(fileSystem, f.Name())
+		if err != nil {
+			return nil, err //TODO: decide what to do if a single readfile fails
+		}
+		posts = append(posts, post)
+	}
+	return posts, nil
+}
+
+func getPost(fileSystem fs.FS, fileName string) (Post, error) {
+	postFile, err := fileSystem.Open(fileName)
+	if err != nil {
+		return Post{}, err
+	}
+	defer postFile.Close()
+	return newPost(postFile)
+}
+
