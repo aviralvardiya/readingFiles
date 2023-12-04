@@ -1,3 +1,5 @@
 myNotes.txt
 
 blogposts/go.mod
+blogrenderer/go.mod
+blogrenderer/go.sum
